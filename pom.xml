@@ -1,0 +1,30 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.wangsong</groupId>
+	<artifactId>demo</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<url>http://maven.apache.org</url>
+	<modules>
+		<module>springboot-activemq</module>
+		<module>springboot-redis</module>
+		<module>springboot-curator</module>
+		<module>springboot-session</module>
+		<module>springboot-fastdfs</module>
+		<module>springboot-websocket</module>
+		<module>springboot-disconf</module>
+		<module>spring-activiti</module>
+		<module>mybatis-generator</module>
+		<module>springboot-quartz</module>
+		<module>springboot-validator</module>
+		<module>springboot-mybatis</module>
+		<module>springboot-shardingjdbc</module>
+		<module>springboot-springmvc</module>
+		<module>springboot-rabbitmq</module>
+		<module>springboot-html</module>
+		<module>disconf</module>
+		
+	</modules>
+</project>

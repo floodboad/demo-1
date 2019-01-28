@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+
+		
+		 #Layer1 {
+                position:absolute;
+                left:153px;
+                top:94px;
+                width:106px;
+                height:106px;
+                z-index:1;
+            }
+
+            #Layer2 {
+                position:absolute;
+                left:126px;
+                top:419px;
+                width:156px;
+                height:154px;
+                z-index:2;
+            }
+
+            #Layer4 {
+                position:absolute;
+                left:67px;
+                top:273px;
+                width:278px;
+                height:114px;
+                z-index:3;
+                word-break:break-all;
+            }
+
+            #Layer5{
+                background-image: url(/bj.jpg);
+                background-repeat: no-repeat;
+            }
+
+         img {
+             width: auto;
+             height: auto;
+             max-width: 100%;
+             max-height: 100%;
+         }
+    </style>
+</head>
+
+<body>
+    <div style="width: 389px;height:689px;" class="test" id="Layer5">
+        <div id="Layer1"><img id="i1" src="" width="103" height="107" /></div>
+        <div id="Layer2"><img id="i2" src=""  width="158" height="156" /></div>
+        <div id="Layer4"></div>
+    </div>
+    <div id="src"/>
+    <script type="text/javascript" src="/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/html2canvas.min.js"></script>
+    <script type="text/javascript" src="/canvas2image.js"></script>
+    <script type="text/javascript">
+        function getData(){
+            $.ajax({
+                url:"/age",
+                type:"post",
+                async:false,
+                success:function(data){
+                    $("#i1").attr("src", data.i1);
+                    $("#i2").attr("src", data.i2);
+                    $("#Layer4").text(data.text)
+                    html2img()
+                }
+            });
+        }
+
+        function html2img(){
+
+            var scale=5;
+            var shareContent = $(".test").get(0); //将jQuery对象转换为dom对象
+
+            var width = shareContent.offsetWidth;
+            var height = shareContent.offsetHeight;
+
+            var canvas = document.createElement("canvas");
+
+            canvas.width = width * scale;
+            canvas.height = height * scale;
+
+            var opts = {
+                scale: scale,
+                canvas: canvas,
+                logging: true,
+                width: width,
+                height: height
+            };
+            html2canvas(shareContent,opts).then(function() {
+                var img = Canvas2Image.convertToImage(canvas, canvas.width, canvas.height);
+                $("#Layer5").hide();
+                //let type = "png"; //图片类型
+                //let f = '' //图片文件名
+                //Canvas2Image.saveAsImage(canvas, canvas.width, canvas.height, type, f)
+                $("#src").html(img)
+                $("#src").css({"width":"389px","height":"689px"});
+                sumitImageFile(img.src)
+            });
+        }
+
+
+
+        /**
+        * @param base64Codes
+        *            图片的base64编码
+        */
+        function sumitImageFile(base64Codes){
+            var form=document.forms[0];
+
+            var formData = new FormData(form);   //这里连带form里的其他参数也一起提交了,如果不需要提交其他参数可以直接FormData无参数的构造函数
+
+            //convertBase64UrlToBlob函数是将base64编码转换为Blob
+            formData.append("imageName",convertBase64UrlToBlob(base64Codes));  //append函数的第一个参数是后台获取数据的参数名,和html标签的input的name属性功能相同
+
+            //ajax 提交form
+            $.ajax({
+                url : "/imgsrc",
+                type : "POST",
+                data : formData,
+                dataType:"text",
+                processData : false,         // 告诉jQuery不要去处理发送的数据
+                contentType : false,        // 告诉jQuery不要去设置Content-Type请求头
+
+                success:function(data){
+                    alert(data)
+                }
+            });
+        }
+
+        /**
+         * 将以base64的图片url数据转换为Blob
+         * @param urlData
+         *            用url方式表示的base64图片数据
+         */
+        function convertBase64UrlToBlob(urlData){
+
+            var bytes=window.atob(urlData.split(',')[1]);        //去掉url的头，并转换为byte
+
+            //处理异常,将ascii码小于0的转换为大于0
+            var ab = new ArrayBuffer(bytes.length);
+            var ia = new Uint8Array(ab);
+            for (var i = 0; i < bytes.length; i++) {
+                ia[i] = bytes.charCodeAt(i);
+            }
+
+            return new Blob( [ab] , {type : 'image/png'});
+        }
+
+        getData();
+    </script>
+</body>
+
+</html>

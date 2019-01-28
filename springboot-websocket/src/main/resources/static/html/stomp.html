@@ -1,0 +1,50 @@
+<html>
+<head>
+    <script type="text/javascript" src="sockjs-0.3.4.js"></script>
+    <script type="text/javascript" src="stomp.js"></script>
+    <script type="text/javascript" src="jquery-1.9.1.js"></script>
+    <script type="text/javascript">
+        var stompClient = null;
+        function connect() {
+            var socket = new SockJS('/websocket');
+            stompClient = Stomp.over(socket);
+            stompClient.connect('', '', function (frame) {
+                stompClient.subscribe('/queue/client1', function (message) {
+                 alert(message.body);
+                });
+            }, function () {
+               
+            });
+        }
+
+     
+
+        function send() {
+            stompClient.send("/app/queue", {}, JSON.stringify({
+                'param': $("#param").val()
+            }));
+        }
+        function push() {
+            $.ajax({
+                type: "POST",
+                url: "/push.do",
+                datatype: "json",
+                data: "param="+$("#param").val(),
+                success: function (data) {
+                  
+                }
+            });
+        }
+        $(function () {
+            connect();
+        });
+
+    </script>
+</head>
+<body>
+<input type="text" name="param" id="param"><br>
+<input type="button" onclick="send();" value="websocket发送"><br>
+<input type="button" onclick="push();" value="action发送">
+
+</body>
+</html>
