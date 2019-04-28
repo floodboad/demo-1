@@ -23,6 +23,7 @@
 		<module>springboot-shardingjdbc</module>
 		<module>springboot-springmvc</module>
 		<module>springboot-rabbitmq</module>
+		<module>springboot-weixin</module>
 		<module>springboot-html</module>
 		<module>disconf</module>
 		
